@@ -161,21 +161,17 @@
         </div>
 
         <div class="rsvp-form-panel reveal reveal-delay-1">
-          <div class="rsvp-success" data-rsvp-success hidden role="status">
+          <div class="rsvp-success" data-rsvp-success hidden role="status" tabindex="-1">
             <strong>Your RSVP has been received.</strong>
             <span>Thank you. Your response was sent to King Daryl's guest list.</span>
           </div>
 
-          <form class="rsvp-form" action="https://formsubmit.co/kingathenaselectxii@gmail.com" method="POST" data-rsvp-form>
-            <input type="hidden" name="_subject" value="New Royal Soirée RSVP for King Daryl">
-            <input type="hidden" name="_next" value="https://koaxiiselect2026.com/?rsvp=received#rsvp">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_url" value="https://koaxiiselect2026.com/">
-            <input class="form-honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <form class="rsvp-form" action="#rsvp" method="POST" data-rsvp-form data-endpoint="https://script.google.com/macros/s/AKfycbwFr0N4WEnKufazl1xnCZkVQfjyo3iXy15R-2Vl9izhYWv6d9d6pfFo0qAZ2oicN28d/exec">
+            <input class="form-honey" type="text" name="honey" tabindex="-1" autocomplete="off" aria-hidden="true">
 
             <div class="form-field">
               <label for="rsvp-name">Full name</label>
-              <input id="rsvp-name" type="text" name="Full name" autocomplete="name" required>
+              <input id="rsvp-name" type="text" name="name" autocomplete="name" required>
             </div>
 
             <div class="form-field">
@@ -186,11 +182,11 @@
             <fieldset class="form-field form-choice" data-attendance>
               <legend>Will you attend The Royal Soirée?</legend>
               <label>
-                <input type="radio" name="Attendance" value="Yes, I will attend" required>
+                <input type="radio" name="attendance" value="Yes, I will attend" required>
                 <span>Yes, I will attend</span>
               </label>
               <label>
-                <input type="radio" name="Attendance" value="No, I am unable to attend" required>
+                <input type="radio" name="attendance" value="No, I am unable to attend" required>
                 <span>No, I am unable to attend</span>
               </label>
             </fieldset>
@@ -199,29 +195,29 @@
               <fieldset class="form-field form-choice">
                 <legend>Who are you responding for?</legend>
                 <label>
-                  <input type="radio" name="Party size" value="Myself only" data-party-option>
+                  <input type="radio" name="party" value="Myself only" data-party-option>
                   <span>Myself only</span>
                 </label>
                 <label>
-                  <input type="radio" name="Party size" value="Myself and one guest" data-party-option>
+                  <input type="radio" name="party" value="Myself and one guest" data-party-option>
                   <span>Myself and one guest</span>
                 </label>
               </fieldset>
 
               <div class="form-field" data-guest-field hidden>
                 <label for="guest-name">Guest's full name</label>
-                <input id="guest-name" type="text" name="Guest full name" autocomplete="name" data-guest-name>
+                <input id="guest-name" type="text" name="guest" autocomplete="name" data-guest-name>
               </div>
 
               <div class="form-field">
                 <label for="guest-needs">Dietary restrictions or accessibility needs <span>Optional</span></label>
-                <textarea id="guest-needs" name="Dietary restrictions or accessibility needs" rows="3"></textarea>
+                <textarea id="guest-needs" name="needs" rows="3"></textarea>
               </div>
             </div>
 
             <div class="form-field">
               <label for="guest-message">Message for King Daryl <span>Optional</span></label>
-              <textarea id="guest-message" name="Message for Daryl" rows="3"></textarea>
+              <textarea id="guest-message" name="message" rows="3"></textarea>
             </div>
 
             <p class="form-status" data-form-status aria-live="polite"></p>

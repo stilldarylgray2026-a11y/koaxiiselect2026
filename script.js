@@ -4,7 +4,7 @@ const revealItems = document.querySelectorAll(".reveal");
 const countdown = document.querySelector("[data-countdown]");
 const rsvpSection = document.querySelector("#rsvp");
 const rsvpForm = document.querySelector("[data-rsvp-form]");
-const attendanceInputs = document.querySelectorAll('input[name="Attendance"]');
+const attendanceInputs = document.querySelectorAll('input[name="attendance"]');
 const attendingFields = document.querySelector("[data-attending-fields]");
 const partyInputs = document.querySelectorAll("[data-party-option]");
 const guestField = document.querySelector("[data-guest-field]");
@@ -65,7 +65,7 @@ setInterval(renderCountdown, 60000);
 const setGuestVisibility = () => {
   if (!guestField || !guestName) return;
 
-  const partyChoice = document.querySelector('input[name="Party size"]:checked');
+  const partyChoice = document.querySelector('input[name="party"]:checked');
   const hasGuest = partyChoice?.value === "Myself and one guest";
 
   guestField.hidden = !hasGuest;
@@ -77,7 +77,7 @@ const setGuestVisibility = () => {
 const setAttendanceVisibility = () => {
   if (!attendingFields) return;
 
-  const attendanceChoice = document.querySelector('input[name="Attendance"]:checked');
+  const attendanceChoice = document.querySelector('input[name="attendance"]:checked');
   const isAttending = attendanceChoice?.value === "Yes, I will attend";
 
   attendingFields.hidden = !isAttending;
@@ -93,22 +93,66 @@ attendanceInputs.forEach((input) => input.addEventListener("change", setAttendan
 partyInputs.forEach((input) => input.addEventListener("change", setGuestVisibility));
 setAttendanceVisibility();
 
+const showRsvpSuccess = () => {
+  if (!rsvpSuccess || !rsvpForm) return;
+
+  rsvpSuccess.hidden = false;
+  rsvpForm.hidden = true;
+  rsvpSuccess.focus({ preventScroll: true });
+  rsvpSection?.scrollIntoView({ block: "start", behavior: reducedMotion ? "auto" : "smooth" });
+};
+
+const setRsvpStatus = (message, isError = false) => {
+  if (!formStatus) return;
+
+  formStatus.textContent = message;
+  formStatus.classList.toggle("is-error", isError);
+};
+
 if (rsvpForm) {
-  rsvpForm.addEventListener("submit", () => {
+  rsvpForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const endpoint = rsvpForm.dataset.endpoint;
+    const submitLabel = submitRsvp?.textContent;
+
     if (submitRsvp) {
       submitRsvp.disabled = true;
       submitRsvp.textContent = "Sending RSVP...";
     }
+    setRsvpStatus("Please wait while your response is sent.");
 
-    if (formStatus) formStatus.textContent = "Please wait while your response is sent.";
+    try {
+      // A form-encoded POST needs no preflight, which Apps Script cannot answer.
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: new URLSearchParams(new FormData(rsvpForm)),
+      });
+      const result = await response.json();
+
+      if (!result.ok) {
+        throw new Error(result.error || "Your RSVP could not be saved.");
+      }
+
+      rsvpForm.reset();
+      setAttendanceVisibility();
+      setRsvpStatus("");
+      showRsvpSuccess();
+    } catch (error) {
+      const isNetworkIssue = error instanceof TypeError || error instanceof SyntaxError;
+      setRsvpStatus(
+        isNetworkIssue
+          ? "We could not send your RSVP. Please check your connection and try again."
+          : error.message,
+        true
+      );
+    } finally {
+      if (submitRsvp) {
+        submitRsvp.disabled = false;
+        submitRsvp.textContent = submitLabel;
+      }
+    }
   });
-}
-
-const rsvpWasReceived = new URLSearchParams(window.location.search).get("rsvp") === "received";
-
-if (rsvpWasReceived && rsvpSuccess && rsvpForm) {
-  rsvpSuccess.hidden = false;
-  rsvpForm.hidden = true;
 }
 
 if (rsvpSection && mobileRsvp && "IntersectionObserver" in window) {
