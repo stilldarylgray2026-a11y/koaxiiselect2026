@@ -39,7 +39,7 @@ if ("IntersectionObserver" in window && !reducedMotion) {
   revealItems.forEach((item) => item.classList.add("is-visible"));
 }
 
-const deadline = new Date("2026-11-20T23:59:59-06:00");
+const deadline = new Date("2026-11-27T23:59:59-06:00");
 
 const renderCountdown = () => {
   if (!countdown) return;
